@@ -1,0 +1,88 @@
+Sistemin localde veya domain ile bir sunucuda çalışması için yapılması işlemler farklıdır.
+not:kullanici adi=eneskaan
+    sifre = eneskaan142
+
+Local sunucuda çalıştırmak;
+
+1) Bilgisayarınıza xamp indirin.
+   "https://www.apachefriends.org/tr/download.html" adresinden indirebilirsiniz
+
+2) Xamp'ı açın, apache ve mysql modullerinin yanındaki start tuşunu basın.
+   Tarayıcınızda "http://www.localhost/phpmyadmin/" adresine gidin.
+   Sol tarafta bulunan Yeni kısmına tıklayın ve veritabanı adı kısmına "otomatik-sulama-sistemi" yazınız.
+   Hemen sağında bulunan alanı "utf8mb4_general_ci" olarak ayarlayın
+   Daha sonra sol menüde oluşan "otomatik-sulama-sistemi" isimli database'e tıklayın ve yukarıdan içe aktar butonuna tıklayınız.
+   otomatik-sulama-sistemi-veritabani.sql adlı dosyayı seçiniz ve aşağıdan içe aktar butonuna basınız
+   Sol tarafta yer alan otomatik-sulama-sistemi veritabanına tıklayın ve "ayarlar" isimli tabloyu açın.
+   Burada düzenleye tıklayın ve url kısmına "http://www.localhost/otomatik-sulama-sistemi/" yazın ve git diyin.
+
+3) Xamp'i açın ve sağ tarafta bulunan explorer butonuna basınız. 
+   Açılan pencereden htdocs klasörünü açınız.
+   "otomatik-sulama-sistemi" adlı klasörü buraya taşıyınız.
+
+4) "otomatik-sulama-sistemi" adlı klasörün içindeki "sinif" klasörünü açın.
+   veritabani.php isimli dosyayı (notdefteri,phpstorm,vscode..vb) uygulama yardımı ile açın.
+   $sunucu yazan kısımdaki tırnakların içine localhost yazınız.
+   //var $port="3306"; kısmındaki "//" işaretlerini siliniz.
+   $kullanici_adi kısmındaki tırnakların içine root yazınız.
+   $sifre kısmındaki tırnakların içini boş bırakınız.
+   $veri_tabani_adi kısmındaki tırnakların içine otomatik-sulama-sistemi yazınız.
+   /*";port=" . $this->port . */ kısmındaki "/*" , "*/" işaretlerini siliniz ve ardından ctrl+s ile kaydediniz.
+
+5) .htaccess isimli dosyayı açın ve RewriteBase kısmını RewriteBase /otomatik-sulama-sistemi/ olarak değiştirip kaydedin.
+   Xamp' i açın ve apachenin config butonuna tıklayın ardından Apache (httpd.conf)'a tıklayın.
+   LoadModule rewrite_module modules/mod_rewrite.so ifadesinin başındaki # ifadesini silin.
+   Directory alanındaki AllowOverride ifadesinin sonunu All yapın
+   örnek:
+   <Directory "C:/xampp/htdocs">
+     AllowOverride All
+   </Directory>
+
+6) Ardunio ide 'yi indirin
+   "https://www.arduino.cc/en/software" adresinden indirebilirsiniz
+
+7) "otomatik-sulama-sistemi-esp.ino" adlı dosyayı ardunio ide ile açınız.
+   sol üstten File a tıklayın ve ardından preferences a tıklayın.
+   Additional boards manager URLs: kısmına https://arduino.esp8266.com/stable/package_esp8266com_index.json linkini yapıştırın ve ok diyin.
+   Ardından sırasıyla tools, board, esp8266, Nodemcu 1.0 (ESP-12E Module)'e tıklayın.
+   Ardından sırasıyla tools ve port'a tıklayıp esp8266'nın bağlı olduğu portu seçiniz.
+   Daha sonra sol tarfataki kitaplardan oluşan simgeye tıklayarak dht11 yazın ve DHT sensor library by Adafruit kütüphanesini indirin.
+   Daha sonra sol tarfataki kitaplardan oluşan simgeye tıklayarak esp8266 yazın ve esp8266 kütüphanesini indirin.
+   String serverName kısmındaki tırnakların içine http://ipadresiniz/otomatik-sulama-sistemi/ yazınız. 
+   örnek:String serverName = "http://192.168.1.7/otomatik-sulama-sistemi/";
+   ip adresini öğrenmek için:
+	windows arama çubuğuna cmd(komut istemi) yazın ve enter a basın.
+	açılan pencerede ipconfig yazın ve entera basın.
+	IPv4 Address olarak başlayan bölüm sizin ip adresiniz.
+   ssid kısmındaki tırnakların içine wifi adınızı ve password kısmındaki tırnakların içine wifi şifrenizi yazın.
+   Ve sol üstteki sağ ok butonu ile kodu espye yükleyin.
+
+8) Artık tarayıcınıza "http://www.localhost/otomatik-sulama-sistemi/" linkini aratarak sisteme erişebilirsiniz.
+   Not: Sistemin çalışması için xampp açık olmalı ve apache ile mysql çalışır ddurumda olmalı.
+ 
+Hosting üzerinden çalıştırmak;
+
+1) otomatik-sulama-sistemi dosyasının içindeki dosyaları sunucunuza yükleyin.
+
+2) otomatik-sulama-sistemi-veritabanı.sql isimli dosyayı phpmyadmin üzerinden içe aktarın.
+
+3) otomatik-sulama-sistemi veri tabanındaki ayarlar tablosundan url alanına domaininizi yazın.
+
+4) "sinif" klasörünü açın.
+    veritabani.php isimli dosyayı (notdefteri,phpstorm,vscode..vb) uygulama yardımı ile açın.
+    $sunucu yazan kısımdaki tırnakların içine sunucu adresinizi yazınız.
+    $kullanici_adi kısmındaki tırnakların içine veri tabanı kullanıcı adınızı yazınız.
+    $sifre kısmındaki tırnakların içine veri tabanı şifrenizi yazınız.
+    $veri_tabani_adi kısmındaki tırnakların içine veri tabanı adınızı yazınız ve değişiklikleri kaydedin.
+
+5) otomatik-sulama-sistemi-esp.ino adlı dosyayı ardunio ide ile açın
+   sol üstten File a tıklayın ve ardından preferences a tıklayın.
+   Additional boards manager URLs: kısmına https://arduino.esp8266.com/stable/package_esp8266com_index.json linkini yapıştırın ve ok diyin.
+   Ardından sırasıyla tools, board, esp8266, Nodemcu 1.0 (ESP-12E Module)'e tıklayın.
+   Ardından sırasıyla tools ve port'a tıklayıp esp8266'nın bağlı olduğu portu seçiniz.
+   Daha sonra sol tarfataki kitaplardan oluşan simgeye tıklayarak dht11 yazın ve DHT sensor library by Adafruit kütüphanesini indirin.
+   Daha sonra sol tarfataki kitaplardan oluşan simgeye tıklayarak esp8266 yazın ve esp8266 kütüphanesini indirin.
+   String serverName kısmındaki tırnakların içine domain adresinizi yazınız. 
+   örnek:String serverName = "https://otomatiksulamasistemi.com.tr/";
+   ssid kısmındaki tırnakların içine wifi adınızı ve password kısmındaki tırnakların içine wifi şifrenizi yazın.
+   Ve sol üstteki sağ ok butonu ile kodu espye yükleyin.
